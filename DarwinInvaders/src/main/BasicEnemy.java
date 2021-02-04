@@ -8,6 +8,7 @@ package main;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Rectangle;
+import java.awt.image.BufferedImage;
 import java.util.LinkedList;
 import java.util.Random;
 
@@ -23,6 +24,9 @@ public class BasicEnemy extends GameObject {
     private int behaviourStep;
     private LinkedList<Integer> behaviour;
     
+    private Sprite sprite;
+    private BufferedImage model;
+    
     private Random r;
     
     public BasicEnemy(int _x, int _y, ObjHandler handler)
@@ -32,6 +36,9 @@ public class BasicEnemy extends GameObject {
         value = 0;
         cycleCooldown = 0;
         behaviourStep = 0;
+        
+        sprite = new Sprite("/res/Sprite_Inv01.png", GlobalVars.enemySizeX, GlobalVars.enemySizeY);
+        model = sprite.getImage(0);
         
         r = new Random();
         
@@ -94,14 +101,15 @@ public class BasicEnemy extends GameObject {
             //zmień zachowanie - następny krok
             behaviourStep++;
             if(behaviourStep >= GlobalVars.behaviourSize) behaviourStep = 0;
-            
-            if(behaviourStep == 0)
+            int move = behaviour.get(behaviourStep);
+            model = sprite.getImage(move);
+            if(move == 0)
             {
                 this.speedX = GlobalVars.enemySpeed;
                 this.speedY = 0;
             }
             else
-                if(behaviourStep == 1)
+                if(move == 1)
                 {
                     this.speedX = -GlobalVars.enemySpeed;
                     this.speedY = 0;
@@ -118,16 +126,17 @@ public class BasicEnemy extends GameObject {
         
         if(x <0) x = 0;
         else
-            if(x > GlobalVars.gameWidth - GlobalVars.enemySizeX)
-                x = GlobalVars.gameWidth - GlobalVars.enemySizeX;
+            if(x > GlobalVars.gameWidth - GlobalVars.enemySizeX -16)
+                x = GlobalVars.gameWidth - GlobalVars.enemySizeX -16;
         if(y > GlobalVars.gameHeight) this.kill();
     }
 
     @Override
     public void render(Graphics g) 
     {
-       g.setColor(Color.MAGENTA);
-       g.fillRect(x, y, GlobalVars.enemySizeX, GlobalVars.enemySizeY);
+       //g.setColor(Color.MAGENTA);
+       //g.fillRect(x, y, GlobalVars.enemySizeX, GlobalVars.enemySizeY);
+       g.drawImage(model, x, y, null);
     }
     
 }

@@ -8,7 +8,12 @@ package main;
 import java.awt.Graphics;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.imageio.ImageIO;
 /**
  * Klasa do obsługi róznych typów menu
  * @author Asx
@@ -19,6 +24,9 @@ public class Menu extends MouseAdapter{
     private GameController game;
     private ArrayList<BasicButton> buttons;
     private MenuType type;
+    
+    private BufferedImage logo;
+    private int lx, ly;
     
     public static enum MenuType
     {
@@ -41,6 +49,11 @@ public class Menu extends MouseAdapter{
         
         if(type == MenuType.MAIN)
         {
+            try {
+                logo = ImageIO.read(getClass().getResource("/res/DI_main_logo.png"));
+            } catch (IOException ex) {
+                Logger.getLogger(Menu.class.getName()).log(Level.SEVERE, null, ex);
+            }
             String[] caption = {"Play", "Options", "Info", "Exit"};
             int n = caption.length;
             for(int i=0; i<n; i++)
@@ -49,11 +62,18 @@ public class Menu extends MouseAdapter{
         else
             if(type == MenuType.PAUSE)
             {
+                try {
+                logo = ImageIO.read(getClass().getResource("/res/DI_pause_logo.png"));
+            } catch (IOException ex) {
+                Logger.getLogger(Menu.class.getName()).log(Level.SEVERE, null, ex);
+            }
                 String[] caption = {"Resume", "Info", "Quit"};
                 int n = caption.length;
                 for(int i=0; i<n; i++)
                     buttons.add(new BasicButton(caption[i], GUIConsts.menuX , GUIConsts.menuY + i*(GUIConsts.buttonHeight+GUIConsts.vOffset)));
             }
+        lx = (GlobalVars.gameWidth - logo.getWidth())/2-8;
+        ly = (GUIConsts.menuY - logo.getHeight())/2;
     }
     
     private boolean mouseOver(int btnNum)//arg? Numer przycisku?
@@ -122,6 +142,7 @@ public class Menu extends MouseAdapter{
     
     public void render(Graphics g)
     {
+        g.drawImage(logo, lx, ly, null);
         int n = buttons.size();
         for(int i=0; i<n; i++)
         {

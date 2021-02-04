@@ -95,7 +95,7 @@ public class Player extends GameObject{
         //"ramka" gry
         if(x <0) x = 0;
         else
-            if(x > GlobalVars.gameWidth - GlobalVars.playerSizeX) x = GlobalVars.gameWidth - GlobalVars.playerSizeX;
+            if(x > GlobalVars.gameWidth - GlobalVars.playerSizeX -16) x = GlobalVars.gameWidth - GlobalVars.playerSizeX -16;
         
         if(gunCooldown < GlobalVars.cooldownPlayerWeapon) gunCooldown++;
         
